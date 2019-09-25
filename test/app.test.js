@@ -1,6 +1,7 @@
 const { expect } = require('chai');
 const supertest = require('supertest');
 const app = require('../app');
+const data = require('../data');
 
 describe('app module', () => {
   describe('GET /movie', () => {
@@ -11,6 +12,12 @@ describe('app module', () => {
         .expect('Content-Type', /json/)
         .then(res => {
           expect(res.body).to.be.an('array');
+          expect(res.body).to.have.lengthOf.at.least(1);
+          const mov = res.body[0];
+          expect(mov).to.include.all.keys(
+            'country', 'avg_vote', 'genre'
+          );
+          expect(res.body).to.eql(data);
         });
     });
     it('should sort by genre', () => {
